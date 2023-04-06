@@ -76,10 +76,8 @@ mod tests {
     fn test_fahrenheit_to_celsius() {
         let inputs = [32.];
         let outputs = [0.];
-        let mut idx = 0;
-        while idx < inputs.len() {
-            assert!(super::fahrenheit_to_celsius(inputs[idx]) == outputs[idx]);
-            idx += 1;
+        for (idx, &input_item) in inputs.iter().enumerate() {
+            assert!(super::fahrenheit_to_celsius(input_item) == outputs[idx]);
         }
     }
 
@@ -87,12 +85,8 @@ mod tests {
     fn test_celsius_to_fahrenheit() {
         let inputs = [0.];
         let outputs = [32.];
-        let mut idx = 0;
-        while idx < inputs.len() {
-            let result = super::celsius_to_fahrenheit(inputs[idx]);
-            println!("{result}");
-            assert!(result == outputs[idx]);
-            idx += 1;
+        for (idx, &input_item) in inputs.iter().enumerate() {
+            assert!(super::celsius_to_fahrenheit(input_item) == outputs[idx]);
         }
     }
 }
