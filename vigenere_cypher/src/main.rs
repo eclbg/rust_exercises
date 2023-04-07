@@ -37,7 +37,7 @@ fn decrypt(text: &String, key: &String) -> String {
 }
 
 fn encrypt_byte(input_byte: &u8, key_byte: &u8) -> u8 {
-    ((input_byte - 'a' as u8) + (key_byte - 'a' as u8)).rem_euclid(26) + 'a' as u8
+    ((input_byte - b'a') + (key_byte - b'a')).rem_euclid(26) + b'a'
 }
 
 fn decrypt_byte(encrypted_byte: &u8, key_byte: &u8) -> u8 {
@@ -50,19 +50,19 @@ mod tests {
     #[test]
     fn test_encrypt_byte() {
         let input_bytes = [
-            'a' as u8,
-            'o' as u8,
-            't' as u8
+            b'a',
+            b'o',
+            b't'
         ];
         let key_bytes = [
-            'a' as u8,
-            'm' as u8,
-            'e' as u8
+            b'a',
+            b'm',
+            b'e'
         ];
         let encrypted_bytes = [
-            'a' as u8,
-            'a' as u8,
-            'x' as u8
+            b'a',
+            b'a',
+            b'x'
         ];
         for (i, input_byte) in input_bytes.iter().enumerate() {
             assert_eq!(super::encrypt_byte(&input_byte, &key_bytes[i]), encrypted_bytes[i]);
@@ -72,19 +72,19 @@ mod tests {
     #[test]
     fn test_decrypt_byte() {
         let encrypted_bytes = [
-            'a' as u8,
-            'a' as u8,
-            'x' as u8
+            b'a',
+            b'a',
+            b'x'
         ];
         let key_bytes = [
-            'a' as u8,
-            'm' as u8,
-            'e' as u8
+            b'a',
+            b'm',
+            b'e'
         ];
         let decrypted_bytes = [
-            'a' as u8,
-            'o' as u8,
-            't' as u8
+            b'a',
+            b'o',
+            b't'
         ];
         for (i, encrypted_byte) in encrypted_bytes.iter().enumerate() {
             assert_eq!(super::decrypt_byte(&encrypted_byte, &key_bytes[i]), decrypted_bytes[i]);
