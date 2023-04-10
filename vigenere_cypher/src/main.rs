@@ -10,10 +10,12 @@ fn main() {
 
 fn encrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
-    for (&input_byte, &key_byte) in iter::zip(
-        text.to_lowercase().as_bytes().iter(), iter::repeat(key.as_bytes().iter()).flatten()
-        )
-    {
+    let lowercase_text = text.to_lowercase();
+    let zipped = iter::zip(
+        lowercase_text.as_bytes().iter(),
+        iter::repeat(key.as_bytes().iter()).flatten()
+    );
+    for (&input_byte, &key_byte) in zipped {
         if input_byte == b' ' {
             continue;
         }
@@ -26,14 +28,12 @@ fn encrypt(text: &str, key: &str) -> String {
 
 fn decrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
-    // let zipped = iter::zip(
-    //     text.to_lowercase().as_bytes().iter(),
-    //     iter::repeat(key.as_bytes().iter()).flatten()
-    // );
-    for (&input_byte, &key_byte) in iter::zip(
-        text.to_lowercase().as_bytes().iter(), iter::repeat(key.as_bytes().iter()).flatten()
-        )
-    {
+    let lowercase_text = text.to_lowercase();
+    let zipped = iter::zip(
+        lowercase_text.as_bytes().iter(),
+        iter::repeat(key.as_bytes().iter()).flatten()
+    );
+    for (&input_byte, &key_byte) in zipped {
         if input_byte == b' ' {
             continue;
         }
