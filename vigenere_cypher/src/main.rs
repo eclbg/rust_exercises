@@ -5,15 +5,14 @@
 
 use std::iter;
 
-fn main() {
-}
+fn main() {}
 
 fn encrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
     let lowercase_text = text.to_lowercase();
     let zipped = iter::zip(
         lowercase_text.as_bytes().iter(),
-        iter::repeat(key.as_bytes().iter()).flatten()
+        iter::repeat(key.as_bytes().iter()).flatten(),
     );
     for (&input_byte, &key_byte) in zipped {
         if input_byte == b' ' {
@@ -31,7 +30,7 @@ fn decrypt(text: &str, key: &str) -> String {
     let lowercase_text = text.to_lowercase();
     let zipped = iter::zip(
         lowercase_text.as_bytes().iter(),
-        iter::repeat(key.as_bytes().iter()).flatten()
+        iter::repeat(key.as_bytes().iter()).flatten(),
     );
     for (&input_byte, &key_byte) in zipped {
         if input_byte == b' ' {
@@ -53,49 +52,27 @@ fn decrypt_byte(encrypted_byte: u8, key_byte: u8) -> u8 {
     ((diff.rem_euclid(26)) + 'a' as i32) as u8
 }
 
+#[cfg(test)]
 mod tests {
+    use itertools::izip;
 
     #[test]
     fn test_encrypt_byte() {
-        let input_bytes = [
-            b'a',
-            b'o',
-            b't'
-        ];
-        let key_bytes = [
-            b'a',
-            b'm',
-            b'e'
-        ];
-        let encrypted_bytes = [
-            b'a',
-            b'a',
-            b'x'
-        ];
-        for (i, &input_byte) in input_bytes.iter().enumerate() {
-            assert_eq!(super::encrypt_byte(input_byte, key_bytes[i]), encrypted_bytes[i]);
+        let input_bytes = [b'a', b'o', b't'];
+        let key_bytes = [b'a', b'm', b'e'];
+        let encrypted_bytes = [b'a', b'a', b'x'];
+        for (i_byte, k_byte, enc_byte) in izip!(input_bytes, key_bytes, encrypted_bytes) {
+            assert_eq!(super::encrypt_byte(i_byte, k_byte), enc_byte);
         }
     }
 
     #[test]
     fn test_decrypt_byte() {
-        let encrypted_bytes = [
-            b'a',
-            b'a',
-            b'x'
-        ];
-        let key_bytes = [
-            b'a',
-            b'm',
-            b'e'
-        ];
-        let decrypted_bytes = [
-            b'a',
-            b'o',
-            b't'
-        ];
-        for (i, &encrypted_byte) in encrypted_bytes.iter().enumerate() {
-            assert_eq!(super::decrypt_byte(encrypted_byte, key_bytes[i]), decrypted_bytes[i]);
+        let encrypted_bytes = [b'a', b'a', b'x'];
+        let key_bytes = [b'a', b'm', b'e'];
+        let decrypted_bytes = [b'a', b'o', b't'];
+        for (enc_byte, k_byte, dec_byte) in izip!(encrypted_bytes, key_bytes, decrypted_bytes) {
+            assert_eq!(super::decrypt_byte(enc_byte, k_byte), dec_byte);
         }
     }
 
