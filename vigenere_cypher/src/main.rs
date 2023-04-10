@@ -11,7 +11,7 @@ fn encrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
     let zipped = iter::zip(
         text.as_bytes().iter().map(|x| x.to_ascii_lowercase()),
-        iter::repeat(key.as_bytes().iter()).flatten(),
+        key.as_bytes().iter().cycle(),
     );
     for (input_byte, &key_byte) in zipped {
         if input_byte == b' ' {
@@ -28,7 +28,7 @@ fn decrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
     let zipped = iter::zip(
         text.as_bytes().iter().map(|x| x.to_ascii_lowercase()),
-        iter::repeat(key.as_bytes().iter()).flatten(),
+        key.as_bytes().iter().cycle(),
     );
     for (input_byte, &key_byte) in zipped {
         if input_byte == b' ' {
