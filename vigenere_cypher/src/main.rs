@@ -3,16 +3,20 @@
 // Only supports ascii characters and spaces as inputs. Spaces are ignored.
 // Converts input to lowercase and output is always lowercase
 
+use std::iter;
+
 fn main() {
 }
 
-fn encrypt(text: &String, key: &String) -> String {
-    let key_len = key.len();
-    let key_bytes: Vec<&u8> = key.as_bytes().iter().collect();
+fn encrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
-    for (i, input_byte) in text.to_lowercase().as_bytes().iter().enumerate() {
-        if *input_byte == ' ' as u8 { continue };
-        let key_byte = key_bytes[i % key_len];
+    for (&input_byte, &key_byte) in iter::zip(
+        text.to_lowercase().as_bytes().iter(), iter::repeat(key.as_bytes().iter()).flatten()
+        )
+    {
+        if input_byte == b' ' {
+            continue;
+        }
         let encrypted_byte = encrypt_byte(input_byte, key_byte);
         result.push(encrypted_byte as char);
     }
@@ -20,15 +24,19 @@ fn encrypt(text: &String, key: &String) -> String {
     result
 }
 
-fn decrypt(text: &String, key: &String) -> String {
-    let key_len = key.len();
-    let key_bytes: Vec<&u8> = key.as_bytes().iter().collect();
+fn decrypt(text: &str, key: &str) -> String {
     let mut result = String::new();
-    for (i, input_byte) in text.to_lowercase().as_bytes().iter().enumerate() {
-        if *input_byte == ' ' as u8 {
-            continue
-        };
-        let key_byte = key_bytes[i % key_len];
+    // let zipped = iter::zip(
+    //     text.to_lowercase().as_bytes().iter(),
+    //     iter::repeat(key.as_bytes().iter()).flatten()
+    // );
+    for (&input_byte, &key_byte) in iter::zip(
+        text.to_lowercase().as_bytes().iter(), iter::repeat(key.as_bytes().iter()).flatten()
+        )
+    {
+        if input_byte == b' ' {
+            continue;
+        }
         let decrypted_byte = decrypt_byte(input_byte, key_byte);
         result.push(decrypted_byte as char);
     }
@@ -36,12 +44,12 @@ fn decrypt(text: &String, key: &String) -> String {
     result
 }
 
-fn encrypt_byte(input_byte: &u8, key_byte: &u8) -> u8 {
+fn encrypt_byte(input_byte: u8, key_byte: u8) -> u8 {
     ((input_byte - b'a') + (key_byte - b'a')).rem_euclid(26) + b'a'
 }
 
-fn decrypt_byte(encrypted_byte: &u8, key_byte: &u8) -> u8 {
-    let diff = *encrypted_byte as i32 - *key_byte as i32;
+fn decrypt_byte(encrypted_byte: u8, key_byte: u8) -> u8 {
+    let diff = encrypted_byte as i32 - key_byte as i32;
     ((diff.rem_euclid(26)) + 'a' as i32) as u8
 }
 
@@ -64,8 +72,8 @@ mod tests {
             b'a',
             b'x'
         ];
-        for (i, input_byte) in input_bytes.iter().enumerate() {
-            assert_eq!(super::encrypt_byte(&input_byte, &key_bytes[i]), encrypted_bytes[i]);
+        for (i, &input_byte) in input_bytes.iter().enumerate() {
+            assert_eq!(super::encrypt_byte(input_byte, key_bytes[i]), encrypted_bytes[i]);
         }
     }
 
@@ -86,8 +94,8 @@ mod tests {
             b'o',
             b't'
         ];
-        for (i, encrypted_byte) in encrypted_bytes.iter().enumerate() {
-            assert_eq!(super::decrypt_byte(&encrypted_byte, &key_bytes[i]), decrypted_bytes[i]);
+        for (i, &encrypted_byte) in encrypted_bytes.iter().enumerate() {
+            assert_eq!(super::decrypt_byte(encrypted_byte, key_bytes[i]), decrypted_bytes[i]);
         }
     }
 
